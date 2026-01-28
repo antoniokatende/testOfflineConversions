@@ -1,56 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
   <meta charset="UTF-8" />
   <title>Thank You</title>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-K9BCQBXJ');</script>
-  <!-- End Google Tag Manager -->
-  <!-- Google tag -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8MMHGDHWC0"></script>
+
+  <!-- Consent Mode v2 (must be before GTM) -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'G-8MMHGDHWC0', { debug_mode: true });
-    const emailHash = localStorage.getItem('email_hash');
-    const phoneHash = localStorage.getItem('phone_hash');
-    const gclid = localStorage.getItem('gclid');
-
-    /* Google Ads Conversion + Enhanced Conversions */
-
-
-    /* Google Ads Conversion Event */
-    gtag('event', 'conversion', {
-      send_to: '10851020503/ZBlFCJT-segYENfdlbYo',
-      value: 1.0,
-      currency: 'USD',
-      gclid: gclid,
-      user_data: {
-        email: emailHash,
-        phone_number: phoneHash
-      },
-      debug_mode: true
-
+    gtag('consent', 'default', {
+      ad_storage: 'denied',
+      analytics_storage: 'denied',
+      ad_user_data: 'denied',
+      ad_personalization: 'denied'
     });
   </script>
 
+  <!-- Google Tag Manager (USE SAME CONTAINER AS INDEX) -->
+  <script>
+    (function(w,d,s,l,i){
+      w[l]=w[l]||[];
+      w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MKPKSGR6');
+  </script>
+  <!-- End GTM -->
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K9BCQBXJ"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- GTM noscript -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MKPKSGR6"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+
   <div class="container">
     <h1>Thank You</h1>
     <p>Thank you for visiting this site</p>
   </div>
+
+  <script>
+    /* Push enhanced conversion data for GTM */
+    dataLayer.push({
+      event: 'thank_you_view',
+      email_hash: localStorage.getItem('email_hash'),
+      phone_hash: localStorage.getItem('phone_hash'),
+      gclid: localStorage.getItem('gclid')
+    });
+  </script>
 </body>
 </html>
