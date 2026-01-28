@@ -3,58 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <title>Test Offline Conversions</title>
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-MKPKSGR6');</script>
-  <!-- End Google Tag Manager -->
-  <!-- Google tag -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-8MMHGDHWC0"></script>
+
+  <!-- Consent Mode v2 (MUST be before GTM) -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    /* Consent Mode v2 – default denied */
-    gtag('consent', 'default', {
 
+    gtag('consent', 'default', {
       ad_storage: 'denied',
       analytics_storage: 'denied',
-
       ad_user_data: 'denied',
-
       ad_personalization: 'denied'
-
     });
-    gtag('config', 'G-8MMHGDHWC0', { debug_mode: true });
   </script>
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){
+      w[l]=w[l]||[];
+      w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+      var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+      j.async=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+      f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MKPKSGR6');
+  </script>
+  <!-- End GTM -->
 
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
-  <!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MKPKSGR6"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
+  <!-- GTM noscript -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MKPKSGR6"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+
   <div class="container">
     <h1>Test Offline Conversions</h1>
-    
+
     <form id="leadForm" class="form">
       <input type="email" id="email" placeholder="Email address" required />
       <input type="tel" id="phone" placeholder="Phone number" required />
       <button type="submit" class="btn">Submit</button>
     </form>
-
   </div>
-  
+
   <script>
     /* Capture GCLID */
     const params = new URLSearchParams(window.location.search);
     const gclid = params.get('gclid');
     if (gclid) localStorage.setItem('gclid', gclid);
 
-    /* SHA-256 hashing */
     async function sha256(value) {
       const enc = new TextEncoder().encode(value.trim().toLowerCase());
       const hashBuffer = await crypto.subtle.digest('SHA-256', enc);
@@ -73,7 +75,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const emailHash = await sha256(email);
       const phoneHash = await sha256(phone.replace(/\D/g, ''));
 
-      /* Grant consent after submit */
+      /* Grant consent */
       gtag('consent', 'update', {
         ad_storage: 'granted',
         analytics_storage: 'granted',
@@ -81,40 +83,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         ad_personalization: 'granted'
       });
 
-      /* GA4 lead event */
-      gtag('event', 'generate_lead', {
-        user_data: {
-          email: emailHash,
-          phone_number: phoneHash
-        },
-        debug_mode: true
+      /* Push data to GTM */
+      dataLayer.push({
+        event: 'generate_lead',
+        email_hash: emailHash,
+        phone_hash: phoneHash,
+        gclid: gclidStored
       });
 
       /* Send to Google Sheets */
       fetch('https://script.google.com/macros/s/AKfycbxbJHusuMinJIc1pKJIxJju5C2wIsRjoFTyZaQ8P64i8E-S_J_TESU_hJIEG8GAXcs7Ug/exec', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    email,
-    phone,
-    gclid: gclidStored,
-    timestamp: new Date().toISOString()
-  })
-})
-.then(res => res.text())
-.then(text => console.log('Sheets response:', text))
-.catch(err => console.error('Sheets error:', err));
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          phone,
+          gclid: gclidStored,
+          timestamp: new Date().toISOString()
+        })
+      });
 
-
-      /* Store hashed data for thank you page */
       localStorage.setItem('email_hash', emailHash);
       localStorage.setItem('phone_hash', phoneHash);
 
       window.location.href = 'thankyou.html';
     });
   </script>
-
 </body>
 </html>
+
