@@ -17,7 +17,7 @@
     });
   </script>
 
-  <!-- Google Tag Manager (USE SAME CONTAINER AS INDEX) -->
+  <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){
       w[l]=w[l]||[];
@@ -30,6 +30,7 @@
     })(window,document,'script','dataLayer','GTM-MKPKSGR6');
   </script>
   <!-- End GTM -->
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -46,17 +47,21 @@
   </div>
 
   <script>
+    const emailHash = localStorage.getItem('email_hash');
+    const phoneHash = localStorage.getItem('phone_hash');
+    const gclid = localStorage.getItem('gclid');
+
+    console.log('Thank you page loaded');
+    console.log('Email hash:', emailHash);
+    console.log('Phone hash:', phoneHash);
+    console.log('GCLID:', gclid);
+
     /* Push enhanced conversion data for GTM */
     dataLayer.push({
       event: 'thank_you_view',
-      email_hash: localStorage.getItem('email_hash'),
-      phone_hash: localStorage.getItem('phone_hash'),
-      gclid: localStorage.getItem('gclid')
-      console.log(event);
-      console.log(email_hash);
-    console.log(phone_hash);
-    console.log(gclickid);
-      
+      email_hash: emailHash,
+      phone_hash: phoneHash,
+      gclid: gclid
     });
   </script>
 </body>
