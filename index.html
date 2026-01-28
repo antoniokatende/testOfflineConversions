@@ -71,6 +71,10 @@
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
       const gclidStored = localStorage.getItem('gclid');
+      console.log(email);
+      console.log(phone);
+      console.log(gclidStored);
+      
 
       const emailHash = await sha256(email);
       const phoneHash = await sha256(phone.replace(/\D/g, ''));
