@@ -18,13 +18,26 @@
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'G-8MMHGDHWC0');
+    gtag('config', 'G-8MMHGDHWC0', { debug_mode: true });
+    const emailHash = localStorage.getItem('email_hash');
+    const phoneHash = localStorage.getItem('phone_hash');
+    const gclid = localStorage.getItem('gclid');
+
+    /* Google Ads Conversion + Enhanced Conversions */
+
 
     /* Google Ads Conversion Event */
     gtag('event', 'conversion', {
-      'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL',
-      'value': 1.0,
-      'currency': 'USD'
+      send_to: 'AW-CONVERSION_ID/CONVERSION_LABEL',
+      value: 1.0,
+      currency: 'USD',
+      gclid: gclid,
+      user_data: {
+        email: emailHash,
+        phone_number: phoneHash
+      },
+      debug_mode: true
+
     });
   </script>
 
