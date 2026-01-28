@@ -16,6 +16,7 @@
       ad_personalization: 'denied'
     });
   </script>
+
   <!-- Google Tag Manager -->
   <script>
     (function(w,d,s,l,i){
@@ -29,6 +30,7 @@
     })(window,document,'script','dataLayer','GTM-MKPKSGR6');
   </script>
   <!-- End GTM -->
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 
@@ -48,6 +50,7 @@
       <button type="submit" class="btn">Submit</button>
     </form>
   </div>
+
   <script>
     /* Capture GCLID */
     const params = new URLSearchParams(window.location.search);
@@ -68,10 +71,10 @@
       const email = document.getElementById('email').value;
       const phone = document.getElementById('phone').value;
       const gclidStored = localStorage.getItem('gclid');
-      console.log(email);
-      console.log(phone);
-      console.log(gclidStored);
-      
+
+      console.log('Email:', email);
+      console.log('Phone:', phone);
+      console.log('GCLID:', gclidStored);
 
       const emailHash = await sha256(email);
       const phoneHash = await sha256(phone.replace(/\D/g, ''));
@@ -95,20 +98,21 @@
       /* Send to Google Sheets */
       fetch('https://script.google.com/macros/s/AKfycbxbJHusuMinJIc1pKJIxJju5C2wIsRjoFTyZaQ8P64i8E-S_J_TESU_hJIEG8GAXcs7Ug/exec', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
-          email,
-          phone,
+          email: email,
+          phone: phone,
           gclid: gclidStored,
           timestamp: new Date().toISOString()
-        });
-          
-      console.log(email);
-      console.log(phone);
-      console.log(gclidStored);
-      console.log(new Date().toISOString());
-      });
+        })
+      })
+      .then(res => res.text())
+      .then(text => console.log('Sheets response:', text))
+      .catch(err => console.error('Sheets error:', err));
 
+      /* Store hashes for thank you page */
       localStorage.setItem('email_hash', emailHash);
       localStorage.setItem('phone_hash', phoneHash);
 
@@ -117,4 +121,3 @@
   </script>
 </body>
 </html>
-
