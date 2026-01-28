@@ -16,8 +16,20 @@
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+    /* Consent Mode v2 – default denied */
 
-    gtag('config', 'G-8MMHGDHWC0');
+    gtag('consent', 'default', {
+
+      ad_storage: 'denied',
+
+      analytics_storage: 'denied',
+
+      ad_user_data: 'denied',
+
+      ad_personalization: 'denied'
+
+    });
+    gtag('config', 'G-8MMHGDHWC0', { debug_mode: true });
   </script>
 
   <link rel="stylesheet" href="styles.css" />
@@ -29,7 +41,76 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
   <div class="container">
     <h1>Test Offline Conversions</h1>
-    <a href="thankyou.html" class="btn">Click Here</a>
+    
+    <form id="leadForm" class="form">
+      <input type="email" id="email" placeholder="Email address" required />
+      <input type="tel" id="phone" placeholder="Phone number" required />
+      <button type="submit" class="btn">Submit</button>
+    </form>
+
   </div>
+  
+  <script>
+    /* Capture GCLID */
+    const params = new URLSearchParams(window.location.search);
+    const gclid = params.get('gclid');
+    if (gclid) localStorage.setItem('gclid', gclid);
+
+    /* SHA-256 hashing */
+    async function sha256(value) {
+      const enc = new TextEncoder().encode(value.trim().toLowerCase());
+      const hashBuffer = await crypto.subtle.digest('SHA-256', enc);
+      return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    document.getElementById('leadForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const gclidStored = localStorage.getItem('gclid');
+
+      const emailHash = await sha256(email);
+      const phoneHash = await sha256(phone.replace(/\D/g, ''));
+
+      /* Grant consent after submit */
+      gtag('consent', 'update', {
+        ad_storage: 'granted',
+        analytics_storage: 'granted',
+        ad_user_data: 'granted',
+        ad_personalization: 'granted'
+      });
+
+      /* GA4 lead event */
+      gtag('event', 'generate_lead', {
+        user_data: {
+          email: emailHash,
+          phone_number: phoneHash
+        },
+        debug_mode: true
+      });
+
+      /* Send to Google Sheets */
+      fetch('YOUR_GOOGLE_APPS_SCRIPT_URL', {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          phone,
+          gclid: gclidStored,
+          timestamp: new Date().toISOString()
+        }),
+        headers: { 'Content-Type': 'application/json' }
+      });
+
+      /* Store hashed data for thank you page */
+      localStorage.setItem('email_hash', emailHash);
+      localStorage.setItem('phone_hash', phoneHash);
+
+      window.location.href = 'thankyou.html';
+    });
+  </script>
+
 </body>
 </html>
