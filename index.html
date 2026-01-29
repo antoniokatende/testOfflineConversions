@@ -105,6 +105,7 @@
 .then(res => res.text())
 .then(text => {
   console.log('Sheets response:', text);
+  console.log("Google Sheets")
   window.location.href = 'thankyou.html';
 })
 .catch(err => console.error('Sheets error:', err));
