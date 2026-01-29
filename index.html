@@ -91,7 +91,27 @@
       });
 
       /* Send to Google Sheets */
-      fetch('https://script.google.com/macros/s/AKfycbyNEERT0W6HNT_K-1dgdNobYR9qAD8wK9wieBJdVSPTJnLW4J08_SXlNsf6QdI2Inn6MQ/exec', {
+      const payload = {
+  email: email,
+  phone: phone,
+  gclid: gclidStored,
+  timestamp: new Date().toISOString()
+};
+
+const blob = new Blob(
+  [JSON.stringify(payload)],
+  { type: 'application/json' }
+);
+
+navigator.sendBeacon(
+  'https://script.google.com/macros/s/AKfycbyNEERT0W6HNT_K-1dgdNobYR9qAD8wK9wieBJdVSPTJnLW4J08_SXlNsf6QdI2Inn6MQ/exec',
+  blob
+);
+
+/* redirect immediately – beacon is non-blocking */
+window.location.href = 'thankyou.html';
+
+    /*fetch('https://script.google.com/macros/s/AKfycbyNEERT0W6HNT_K-1dgdNobYR9qAD8wK9wieBJdVSPTJnLW4J08_SXlNsf6QdI2Inn6MQ/exec', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
@@ -107,7 +127,7 @@
   console.log("Google Sheets")
   window.location.href = 'thankyou.html';
 })
-.catch(err => console.error('Sheets error:', err));
+.catch(err => console.error('Sheets error:', err));*/
 
 
       /* Store hashes for thank you page */
@@ -117,6 +137,6 @@
       //window.location.href = 'thankyou.html';
     });
   </script>
-  <h2>version 13</h2>
+  <h2>version 14</h2>
 </body>
 </html>
