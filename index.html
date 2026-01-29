@@ -93,21 +93,23 @@
       });
 
       /* Send to Google Sheets */
-      fetch('https://script.google.com/macros/s/AKfycbxmwhPa-vc1tSThs0zLLza-yZryXIgpjEv0HfgtTlLpSf5x6dkoYNE-QF0NAYO_jbyXYA/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: email,
-          phone: phone,
-          gclid: gclidStored,
-          timestamp: new Date().toISOString()
-        })
-      })
-      .then(res => res.text())
-      .then(text => console.log('Sheets response:', text))
-      .catch(err => console.error('Sheets error:', err));
+      fetch('https://script.google.com/macros/s/AKfycbz5oDfswwuz3590aeIpeW5cL_6ZV7CcSnAECyqBEziKWX-pphrY57wTuls3qSYqC6id9A/exec', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    email,
+    phone,
+    gclid: gclidStored,
+    timestamp: new Date().toISOString()
+  })
+})
+.then(res => res.text())
+.then(text => {
+  console.log('Sheets response:', text);
+  window.location.href = 'thankyou.html';
+})
+.catch(err => console.error('Sheets error:', err));
+
 
       /* Store hashes for thank you page */
       localStorage.setItem('email_hash', emailHash);
