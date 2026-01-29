@@ -98,15 +98,13 @@
   timestamp: new Date().toISOString()
 };
 
-const blob = new Blob(
-  [JSON.stringify(payload)],
-  { type: 'application/json' }
-);
 
-navigator.sendBeacon(
-  'https://script.google.com/macros/s/AKfycbzsK7NdxYKv_wxRY7d9goleHc0rrhSeJPCpAKrG2LdVuzlgudu4QVY0cQrpPHTqhK8RtA/exec',
-  blob
-);
+fetch('https://script.google.com/macros/s/AKfycbzsK7NdxYKv_wxRY7d9goleHc0rrhSeJPCpAKrG2LdVuzlgudu4QVY0cQrpPHTqhK8RtA/exec', {
+  method: 'POST',
+  mode: 'no-cors',
+  body: JSON.stringify(payload)
+});
+      
 
 window.location.href = 'thankyou.html';
       
@@ -117,6 +115,6 @@ window.location.href = 'thankyou.html';
       //window.location.href = 'thankyou.html';
     });
   </script>
-  <h2>version 16</h2>
+  <h2>version 17</h2>
 </body>
 </html>
